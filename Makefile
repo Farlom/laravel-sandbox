@@ -11,7 +11,7 @@ export CURRENT_UID
 export CURRENT_USER
 
 .PHONY: init
-init: build up composer migrate optimize
+init: env build up composer migrate optimize
 #admin db_seed optimize
 
 .PHONY: up
@@ -65,3 +65,9 @@ db_seed:
 .PHONY: admin
 admin:
 	$(DOCKER_EXEC) php artisan admin:install
+
+.PHONY: env
+env:
+	cp .env.example .env
+	$(DOCKER_EXEC) php artisan key:generate
+	$(DOCKER_EXEC) php artisan optimize

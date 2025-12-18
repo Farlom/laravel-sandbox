@@ -53,9 +53,25 @@ services:
         depends_on:
             - postgres
 
+    elasticsearch:
+        container_name: '${PROJECT_NAME}_elasticsearch'
+        image: elasticsearch:8.18.8
+        ports:
+            - ${ELASTIC_PORT}:9200
+            - ${ELASTIC_TRANSPORT_PORT}:9300
+        environment:
+            - discovery.type=single-node
+            - xpack.security.enabled=false
+            - ES_JAVA_OPTS=-Xms512m -Xmx512m
+        volumes:
+            - elasticsearch:/usr/share/elasticsearch/data
+        networks:
+            - shared_web_network
 
 volumes:
     postgres.data:
+    elasticsearch:
+        driver: local
 
 networks:
     shared_web_network:

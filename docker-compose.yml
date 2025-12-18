@@ -68,6 +68,14 @@ services:
         networks:
             - shared_web_network
 
+    rabbitmq:
+        container_name: '${PROJECT_NAME}_rabbitmq'
+        image: rabbitmq:4.2.2-management-alpine
+        ports:
+            - ${RABBITMQ_PORT}:15672
+        networks:
+            - shared_web_network
+
 volumes:
     postgres.data:
     elasticsearch:

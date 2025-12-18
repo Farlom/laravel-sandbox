@@ -11,7 +11,7 @@ export CURRENT_UID
 export CURRENT_USER
 
 .PHONY: init
-init: env build up composer migrate optimize
+init: build up composer migrate optimize
 #admin db_seed optimize
 
 .PHONY: up

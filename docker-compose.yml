@@ -1,0 +1,62 @@
+services:
+    postgres:
+        container_name: '${PROJECT_NAME}_postgres'
+        image: postgres:16.10
+        ports:
+            - ${DB_PORT}:5432
+        environment:
+            POSTGRES_PASSWORD: ${DB_PASSWORD}
+            POSTGRES_DATABASE: ${DB_DATABASE}
+            POSTGRES_USER: ${DB_USERNAME}
+            PGDATA: /var/lib/postgresql/data/pgdata
+            TZ: ${TIMEZONE}
+        volumes:
+            - postgres.data:/var/lib/postgresql/data/pgdata
+        networks:
+            - shared_web_network
+
+    php:
+        container_name: '${PROJECT_NAME}_php'
+        environment:
+            PHP_XDEBUG_MODE: ${PHP_XDEBUG_MODE}
+            PHP_XDEBUG_CLIENT_PORT: ${PHP_XDEBUG_CLIENT_PORT}
+            PHP_XDEBUG_CLIENT_HOST: ${PHP_XDEBUG_CLIENT_HOST}
+            PHP_IDE_CONFIG: "serverName=${PHP_XDEBUG_SERVER_NAME}"
+        build:
+            args:
+                USER: ${CURRENT_USER}
+                UID: ${CURRENT_UID}
+                WORKING_DIR: ${WORKING_DIR}
+            context: .
+            dockerfile: ./docker/php/Dockerfile
+        volumes:
+            - ./:${WORKING_DIR}
+        links:
+            - postgres
+        extra_hosts:
+            - "host.docker.internal:host-gateway"
+        networks:
+            - shared_web_network
+
+    nginx:
+        container_name: '${PROJECT_NAME}_nginx'
+        image: nginx:1.28.0
+        links:
+            - postgres
+        ports:
+            - ${NGINX_PORT}:80
+        volumes:
+            - ./:${WORKING_DIR}
+            - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf
+        networks:
+            - shared_web_network
+        depends_on:
+            - postgres
+
+
+volumes:
+    postgres.data:
+
+networks:
+    shared_web_network:
+        driver: bridge

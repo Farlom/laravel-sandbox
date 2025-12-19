@@ -21,8 +21,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
         ->middleware(['auth', 'verified'])
         ->name('dashboard');
 
-    Route::controller(ChatController::class)->name('chats.')->group(function () {
-        Route::get('chats', 'index')->name('index');
+    Route::controller(ChatController::class)->name('chats.')->prefix('chats')->group(function () {
+        Route::get('/', 'index')->name('index');
+        Route::post('/', 'store')->name('store');
     });
 });
 

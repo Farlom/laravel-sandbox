@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Chat\ChatController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -15,9 +16,16 @@ use Illuminate\Support\Facades\Route;
 
 Route::view('/', 'welcome');
 
-Route::view('dashboard', 'dashboard')
-    ->middleware(['auth', 'verified'])
-    ->name('dashboard');
+Route::middleware(['auth', 'verified'])->group(function () {
+    Route::view('dashboard', 'dashboard')
+        ->middleware(['auth', 'verified'])
+        ->name('dashboard');
+
+    Route::controller(ChatController::class)->name('chats.')->group(function () {
+        Route::get('chats', 'index')->name('index');
+    });
+});
+
 
 Route::view('profile', 'profile')
     ->middleware(['auth'])

@@ -76,10 +76,28 @@ services:
         networks:
             - shared_web_network
 
+    ollama:
+        container_name: '${PROJECT_NAME}_ollama'
+        image: ollama/ollama
+        ports:
+            - ${OLLAMA_PORT}:11434
+        volumes:
+            - ollama.data:/root/.ollama
+        entrypoint:
+          [
+              "/bin/bash",
+              "-c",
+              "ollama serve & sleep 5 && ollama pull ${OLLAMA_MODEL} && wait"
+          ]
+        restart: unless-stopped
+        networks:
+            - shared_web_network
+
 volumes:
     postgres.data:
     elasticsearch:
         driver: local
+    ollama.data:
 
 networks:
     shared_web_network:

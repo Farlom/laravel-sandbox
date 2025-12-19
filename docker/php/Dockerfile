@@ -1,5 +1,7 @@
 FROM php:8.4-fpm
 
+RUN docker-php-ext-install sockets
+
 ARG USER
 ARG UID
 ARG WORKING_DIR

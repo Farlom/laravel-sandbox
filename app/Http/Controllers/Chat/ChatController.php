@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Chat;
 
 use App\Client\Ollama\OllamaClient;
 use App\Http\Controllers\Controller;
+use App\Jobs\TestJob2;
 use Illuminate\Support\Facades\Http;
 
 class ChatController extends Controller
@@ -15,8 +16,9 @@ class ChatController extends Controller
 
     public function store()
     {
-        $client = new OllamaClient();
+        TestJob2::dispatch();
+//        $client = new OllamaClient();
 
-        dd($client->post());
+//        dd($client->post());
     }
 }

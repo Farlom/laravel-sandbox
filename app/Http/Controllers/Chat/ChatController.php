@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers\Chat;
 
+use App\Client\Ollama\OllamaClient;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Http;
 
 class ChatController extends Controller
 {
@@ -13,6 +15,8 @@ class ChatController extends Controller
 
     public function store()
     {
-        
+        $client = new OllamaClient();
+
+        dd($client->post());
     }
 }

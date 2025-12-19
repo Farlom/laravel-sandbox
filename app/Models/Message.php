@@ -1,0 +1,22 @@
+<?php
+
+namespace App\Models;
+
+use App\Enums\MessageTypeEnum;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+
+class Message extends Model
+{
+    use HasFactory;
+
+    protected $fillable = [
+        'chat_id',
+        'type',
+        'text',
+    ];
+
+    protected $casts = [
+        'type' => MessageTypeEnum::class,
+    ];
+}

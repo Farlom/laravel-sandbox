@@ -2,6 +2,8 @@
 
 namespace App\Client\Ollama;
 
+use App\Client\Ollama\DTO\OllamaRequestDto;
+use App\Client\Ollama\DTO\OllamaResponseDto;
 use Exception;
 use Illuminate\Http\Client\HttpClientException;
 use Illuminate\Http\Client\PendingRequest;
@@ -20,17 +22,19 @@ final class OllamaClient
         $this->client = Http::baseUrl("$host:$port");
     }
 
-    public function post()
+    public function post(OllamaRequestDto $dto): OllamaResponseDto
     {
         try {
-            $response = $this->client->post('api/generate', [
-                'model' => config('ollama.model'),
-                'prompt' => 'Привет!',
-                'stream' => false, // прикольно
-            ]);
+            $response = $this->client->post('api/generate', $dto->jsonSerialize());
 
             if ($response->status() === 200) {
-                return json_decode($response->body(), true);
+                $data =  json_decode($response->body(), true);
+                return new OllamaResponseDto(
+                    $data['created_at'],
+                    $data['response'],
+                    $data['done'],
+                    $data['done_reason']
+                );
             }
 
             throw new Exception("Ошибка запроса к серверу POST: {$response->status()}");

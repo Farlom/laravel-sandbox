@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Chat;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Chat\StoreChatRequest;
 use App\Services\ChatService;
+use Illuminate\Support\Facades\Auth;
 
 class ChatController extends Controller
 {
@@ -14,8 +15,10 @@ class ChatController extends Controller
 
     public function index()
     {
+        $chats = Auth::user()->chats()->with('messages')->get();
+
         return view('chat.index', [
-            'user' => auth()->user(),
+            'chats' => $chats,
         ]);
     }
 

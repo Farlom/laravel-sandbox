@@ -3,7 +3,7 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
             <div
                 x-data="{
-    active: '@if($user->chats->isNotEmpty())chat-{{ $user->chats->first()->id }}@else chat-new @endif',
+    active: '@if($chats->isNotEmpty())chat-{{ $chats->first()->id }}@else chat-new @endif',
     vertical: false,
   }"
                 class="flex flex-col"
@@ -21,7 +21,7 @@
     }"
                     class="flex items-center text-sm"
                 >
-                    @foreach($user->chats as $chat)
+                    @foreach($chats as $chat)
                         <button
                             x-on:click="active = 'chat-{{ $chat->id }}'"
                             x-on:focus="active = 'chat-{{ $chat->id }}'"
@@ -65,7 +65,7 @@
                 <div
                     class=""
                 >
-                    @foreach($user->chats as $chat)
+                    @foreach($chats as $chat)
                         <div
                             x-show="active === 'chat-{{ $chat->id }}'"
                             id="chat-{{ $chat->id }}-tab-pane"

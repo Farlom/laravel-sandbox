@@ -76,6 +76,11 @@
 
                             <div
                                 class="p-6 bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-b-lg sm:rounded-tr-lg">
+                                <div class="">
+                                    @foreach($chat->messages as $message)
+                                        <div class="relative w-fit py-1 px-2 rounded-lg mb-1 @if($message->type == \App\Enums\MessageTypeEnum::User) bg-indigo-400 @else bg-gray-100 @endif">{{ $message->text }}</div>
+                                    @endforeach
+                                </div>
                                 <form action="{{ route('chats.messages.store', $chat) }}" method="POST">
                                     @csrf
                                     <div>

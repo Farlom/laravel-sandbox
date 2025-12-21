@@ -76,6 +76,18 @@
 
                             <div
                                 class="p-6 bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-b-lg sm:rounded-tr-lg">
+                                <form action="{{ route('chats.messages.store', $chat) }}" method="POST">
+                                    @csrf
+                                    <div>
+                                        <x-text-input id="text" name="text" type="text"
+                                                      class="mt-1 block w-full" required autofocus/>
+                                        <x-input-error class="mt-2" :messages="$errors->get('name')"/>
+                                    </div>
+
+                                    <div class="flex items-center gap-4">
+                                        <x-primary-button>{{ __('Save') }}</x-primary-button>
+                                    </div>
+                                </form>
                             </div>
                         </div>
                     @endforeach

@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Chat\ChatController;
+use App\Http\Controllers\MessageController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -21,9 +22,18 @@ Route::middleware(['auth', 'verified'])->group(function () {
         ->middleware(['auth', 'verified'])
         ->name('dashboard');
 
-    Route::controller(ChatController::class)->name('chats.')->prefix('chats')->group(function () {
-        Route::get('/', 'index')->name('index');
-        Route::post('/', 'store')->name('store');
+    Route::name('chats.')->prefix('chats')->group(function () {
+        Route::controller(ChatController::class)->group(function () {
+            Route::get('/', 'index')->name('index');
+            Route::post('/', 'store')->name('store');
+        });
+
+        Route::name('messages.')->prefix('{chat}')->group(function () {
+           Route::controller(MessageController::class)->group(function () {
+               Route::post('/', 'store')->name('store');
+           });
+        });
+
     });
 });
 

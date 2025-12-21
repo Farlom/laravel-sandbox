@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\MessageStatusEnum;
 use App\Enums\MessageTypeEnum;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -14,9 +15,11 @@ class Message extends Model
         'chat_id',
         'type',
         'text',
+        'status',
     ];
 
     protected $casts = [
         'type' => MessageTypeEnum::class,
+        'status' => MessageStatusEnum::class,
     ];
 }

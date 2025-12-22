@@ -4,6 +4,7 @@ namespace App\Jobs;
 
 use App\Client\Ollama\DTO\OllamaRequestDto;
 use App\Client\Ollama\OllamaClient;
+use App\Enums\MessageStatusEnum;
 use App\Enums\MessageTypeEnum;
 use App\Models\Message;
 use App\Models\User;
@@ -12,6 +13,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\DB;
 
 class TestJob2 implements ShouldQueue
 {
@@ -20,7 +22,7 @@ class TestJob2 implements ShouldQueue
     /**
      * Create a new job instance.
      */
-    public function __construct(private User $user, private OllamaRequestDto $dto)
+    public function __construct(private User $user, private Message $message)
     {
         //
     }
@@ -30,19 +32,18 @@ class TestJob2 implements ShouldQueue
      */
     public function handle(OllamaClient $client): void
     {
-        $response = $client->post($this->dto);
+        $dto = new OllamaRequestDto($this->message->text);
 
-        // TODO transaction
-       Message::create([
-           'chat_id' => 1,
-           'type' => MessageTypeEnum::User,
-           'text' => $this->dto->getPrompt(),
-       ]);
+        $response = $client->post($dto);
 
         Message::create([
-            'chat_id' => 1,
-            'type' => MessageTypeEnum::Bot,
-            'text' => $response->getResponse(),
+           'chat_id' => $this->message->chat->id,
+           'type' => MessageTypeEnum::Bot,
+           'status' => MessageStatusEnum::Sent,
+           'text' => $response->getResponse(),
         ]);
+
+       $this->message->status = MessageStatusEnum::Sent;
+
     }
 }

@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Enums\MessageStatusEnum;
 use App\Enums\MessageTypeEnum;
+use App\Traits\ShouldOrderByPrimaryKey;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -11,6 +12,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class Message extends Model
 {
     use HasFactory;
+    use ShouldOrderByPrimaryKey;
 
     protected $fillable = [
         'chat_id',

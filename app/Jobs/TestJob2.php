@@ -43,7 +43,10 @@ class TestJob2 implements ShouldQueue
            'text' => $response->getResponse(),
         ]);
 
-       $this->message->status = MessageStatusEnum::Sent;
+       $this->message->update([
+           'status' => MessageStatusEnum::Sent
+       ]);
+       $this->message->save();
 
     }
 }

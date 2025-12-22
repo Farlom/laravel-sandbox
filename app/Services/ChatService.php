@@ -12,7 +12,7 @@ class ChatService
     {
         $chat = new Chat();
         $chat->fill($request->all());
-        $chat->user_id = auth()->user()->id;
+        $chat->user_id = auth()->user()->id; // FIXME
         $chat->save();
 
         return $chat;

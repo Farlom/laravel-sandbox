@@ -2,12 +2,9 @@
 
 namespace App\Jobs;
 
-use App\Client\Ollama\DTO\OllamaRequestDto;
-use App\Client\Ollama\OllamaClient;
-use App\Enums\MessageStatusEnum;
-use App\Enums\MessageTypeEnum;
 use App\Models\Message;
 use App\Models\User;
+use App\Services\OllamaService;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -30,23 +27,8 @@ class TestJob2 implements ShouldQueue
     /**
      * Execute the job.
      */
-    public function handle(OllamaClient $client): void
+    public function handle(OllamaService $ollamaService): void
     {
-        $dto = new OllamaRequestDto($this->message->text);
-
-        $response = $client->post($dto);
-
-        Message::create([
-           'chat_id' => $this->message->chat->id,
-           'type' => MessageTypeEnum::Bot,
-           'status' => MessageStatusEnum::Sent,
-           'text' => $response->getResponse(),
-        ]);
-
-       $this->message->update([
-           'status' => MessageStatusEnum::Sent
-       ]);
-       $this->message->save();
-
+        $ollamaService->process($this->message);
     }
 }

@@ -19,7 +19,7 @@ final class OllamaClient
         $host = config('ollama.base_url');
         $port = config('ollama.port');
 
-        $this->client = Http::baseUrl("$host:$port");
+        $this->client = Http::timeout(0)->baseUrl("$host:$port");
     }
 
     public function post(OllamaRequestDto $dto): OllamaResponseDto
@@ -28,7 +28,7 @@ final class OllamaClient
             $response = $this->client->post('api/generate', $dto->jsonSerialize());
 
             if ($response->status() === 200) {
-                $data =  json_decode($response->body(), true);
+                $data = json_decode($response->body(), true);
                 return new OllamaResponseDto(
                     $data['created_at'],
                     $data['response'],
